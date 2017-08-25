@@ -4,7 +4,7 @@
 
 Master:
   Memory: "512Mi"
-  HostName: jenkins.acs.az.estrado.io
+  HostName: jenkins.gke.csanchez.org
   ServiceType: ClusterIP
   InstallPlugins:
       - kubernetes:0.11 
