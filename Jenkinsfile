@@ -3,6 +3,8 @@
 // load pipeline functions
 // Requires pipeline-github-lib plugin to load library from github
 @Library('github.com/lachie83/jenkins-pipeline@master')
+import groovy.json.*
+
 def pipeline = new io.estrado.Pipeline()
 
 podTemplate(label: 'jenkins-pipeline', containers: [
@@ -24,8 +26,7 @@ volumes:[
     checkout scm
 
     // read in required jenkins workflow config values
-    def inputFile = readFile('Jenkinsfile.json')
-    def config = new groovy.json.JsonSlurperClassic().parseText(inputFile)
+    def config = readJSON file: 'Jenkinsfile.json'
     println "pipeline config ==> ${config}"
 
     // continue only if pipeline enabled

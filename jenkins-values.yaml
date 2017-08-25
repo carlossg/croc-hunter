@@ -14,10 +14,9 @@ Master:
       - pipeline-github-lib:1.0
       - ghprb:1.39.0
       - blueocean:1.1.4
+      - pipeline-utility-steps:1.4.0
 
   ScriptApproval:
-    - "method groovy.json.JsonSlurperClassic parseText java.lang.String"
-    - "new groovy.json.JsonSlurperClassic"
     - "staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods leftShift java.util.Map java.util.Map"
     - "staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods split java.lang.String"
 
