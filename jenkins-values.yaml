@@ -26,9 +26,9 @@ Master:
       kubernetes.io/tls-acme: "true"
 
     TLS:
-      - secretName: jenkins.acs.az.estrado.io
+      - secretName: jenkins.gke.csanchez.org
         hosts:
-          - jenkins.acs.az.estrado.io
+          - jenkins.gke.csanchez.org
 
 Agent:
   Enabled: false
