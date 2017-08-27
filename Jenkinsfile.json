@@ -5,7 +5,7 @@
     "cpu": "10m",
     "memory": "128Mi",
     "test": true,
-    "hostname": "croc-hunter.onesix.az.estrado.io"
+    "hostname": "croc-hunter.csanchez.org"
   },
   "container_repo": {
     "host": "quay.io",

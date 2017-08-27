@@ -41,6 +41,8 @@ volumes:[
     // set additional git envvars for image tagging
     pipeline.gitEnvVars()
 
+    def namespace = "croc-hunter-${env.BRANCH_NAME.toLowerCase()}"
+
     // If pipeline debugging enabled
     if (config.pipeline.debug) {
       println "DEBUG ENABLED"
@@ -71,28 +73,28 @@ volumes:[
       }
     }
 
-    stage ('test deployment') {
-
-      container('helm') {
-
-        // run helm chart linter
-        pipeline.helmLint(chart_dir)
-
-        // run dry-run helm chart installation
-        pipeline.helmDeploy(
-          dry_run       : true,
-          name          : config.app.name,
-          namespace     : config.app.name,
-          version_tag   : image_tags_list.get(0),
-          chart_dir     : chart_dir,
-          replicas      : config.app.replicas,
-          cpu           : config.app.cpu,
-          memory        : config.app.memory,
-          hostname      : config.app.hostname
-        )
-
-      }
-    }
+    // stage ('test deployment') {
+    //
+    //   container('helm') {
+    //
+    //     // run helm chart linter
+    //     pipeline.helmLint(chart_dir)
+    //
+    //     // run dry-run helm chart installation
+    //     pipeline.helmDeploy(
+    //       dry_run       : true,
+    //       name          : config.app.name,
+    //       namespace     : config.app.name,
+    //       version_tag   : image_tags_list.get(0),
+    //       chart_dir     : chart_dir,
+    //       replicas      : config.app.replicas,
+    //       cpu           : config.app.cpu,
+    //       memory        : config.app.memory,
+    //       hostname      : config.app.hostname
+    //     )
+    //
+    //   }
+    // }
 
     stage ('publish container') {
 
@@ -119,59 +121,86 @@ volumes:[
 
     if (env.BRANCH_NAME =~ "PR-*" ) {
       stage ('deploy to k8s') {
-        container('helm') {
-          // Deploy using Helm chart
-          pipeline.helmDeploy(
-            dry_run       : false,
-            name          : env.BRANCH_NAME.toLowerCase(),
-            namespace     : env.BRANCH_NAME.toLowerCase(),
-            version_tag   : image_tags_list.get(0),
-            chart_dir     : chart_dir,
-            replicas      : config.app.replicas,
-            cpu           : config.app.cpu,
-            memory        : config.app.memory,
-            hostname      : config.app.hostname
-          )
 
-          //  Run helm tests
-          if (config.app.test) {
-            pipeline.helmTest(
-              name        : env.BRANCH_NAME.toLowerCase()
-            )
-          }
-
-          // delete test deployment
-          pipeline.helmDelete(
-              name       : env.BRANCH_NAME.toLowerCase()
-          )
+        container('kubectl') {
+          sh "kubectl create namespace ${namespace}"
+          sh "kubectl apply -n ${namespace} -f kubernetes.yaml"
         }
+
+        // run tests
+        container('kubectl') {
+          sh "curl -sSLf \$(kubectl get -n ${namespace} svc/croc-hunter -o jsonpath='{.spec.ports[0].nodePort}')"
+        }
+
+        // delete test deployment
+        container('kubectl') {
+          sh "kubectl delete -n ${namespace} -f kubernetes.yaml"
+        }
+
+
+        // container('helm') {
+        //   // Deploy using Helm chart
+        //   pipeline.helmDeploy(
+        //     dry_run       : false,
+        //     name          : env.BRANCH_NAME.toLowerCase(),
+        //     namespace     : env.BRANCH_NAME.toLowerCase(),
+        //     version_tag   : image_tags_list.get(0),
+        //     chart_dir     : chart_dir,
+        //     replicas      : config.app.replicas,
+        //     cpu           : config.app.cpu,
+        //     memory        : config.app.memory,
+        //     hostname      : config.app.hostname
+        //   )
+        //
+        //   //  Run helm tests
+        //   if (config.app.test) {
+        //     pipeline.helmTest(
+        //       name        : env.BRANCH_NAME.toLowerCase()
+        //     )
+        //   }
+        //
+        //   // delete test deployment
+        //   pipeline.helmDelete(
+        //       name       : env.BRANCH_NAME.toLowerCase()
+        //   )
+        // }
       }
+    }
+
+    timeout(time:1, unit:'DAYS') {
+      input id: 'approve', message:'Approve deployment?'
     }
 
     // deploy only the master branch
     if (env.BRANCH_NAME == 'master') {
       stage ('deploy to k8s') {
-        container('helm') {
-          // Deploy using Helm chart
-          pipeline.helmDeploy(
-            dry_run       : false,
-            name          : config.app.name,
-            namespace     : config.app.name,
-            version_tag   : image_tags_list.get(0),
-            chart_dir     : chart_dir,
-            replicas      : config.app.replicas,
-            cpu           : config.app.cpu,
-            memory        : config.app.memory,
-            hostname      : config.app.hostname
-          )
-          
-          //  Run helm tests
-          if (config.app.test) {
-            pipeline.helmTest(
-              name          : config.app.name
-            )
-          }
+
+        container('kubectl') {
+          sh "kubectl create namespace ${namespace}"
+          sh "kubectl apply -n ${namespace} -f kubernetes.yaml"
         }
+
+        // container('helm') {
+        //   // Deploy using Helm chart
+        //   pipeline.helmDeploy(
+        //     dry_run       : false,
+        //     name          : config.app.name,
+        //     namespace     : config.app.name,
+        //     version_tag   : image_tags_list.get(0),
+        //     chart_dir     : chart_dir,
+        //     replicas      : config.app.replicas,
+        //     cpu           : config.app.cpu,
+        //     memory        : config.app.memory,
+        //     hostname      : config.app.hostname
+        //   )
+        //
+        //   //  Run helm tests
+        //   if (config.app.test) {
+        //     pipeline.helmTest(
+        //       name          : config.app.name
+        //     )
+        //   }
+        // }
       }
     }
   }
