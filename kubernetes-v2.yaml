@@ -1,0 +1,20 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: croc-hunter
+  labels:
+    name: croc-hunter
+spec:
+  replicas: 10
+  template:
+    metadata:
+      labels:
+        name: croc-hunter
+    spec:
+      containers:
+      - name: croc-hunter
+        image: csanchez/croc-hunter:v2
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
