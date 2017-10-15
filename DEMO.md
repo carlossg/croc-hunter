@@ -1,6 +1,6 @@
 # Demo Walkthrough
 
-## Acknowledgements 
+## Acknowledgements
 Continuation of the awesome work by everett-toews.
 * https://gist.github.com/everett-toews/ed56adcfd525ce65b178d2e5a5eb06aa
 
@@ -11,6 +11,11 @@ https://www.youtube.com/watch?v=eMOzF_xAm7w
 # Prerequisites
 kubectl access to a Kubernetes 1.4+ cluster
 
+In GKE, kubernetes nodes need access to gcr
+
+    gcloud container node-pools create pool-1 --cluster jenkins --zone us-central1-a --num-nodes 1 \
+      --scopes https://www.googleapis.com/auth/devstorage.read_write,https://www.googleapis.com/auth/pubsub
+
 # Install Helm (Mac OS)
 
 ```
@@ -20,7 +25,7 @@ helm repo update
 ```
 
 ## Fork repo
-``` 
+```
 https://github.com/lachie83/croc-hunter#fork-destination-box
 ```
 
@@ -107,7 +112,7 @@ kubectl get pods --namespace jenkins
 
 
 ## Setup Webhook in Github
-``` 
+```
 printf ${JENKINS_URL}/github-webhook/ | pbcopy
 
 # https://github.com/lachie83/croc-hunter/settings/hooks

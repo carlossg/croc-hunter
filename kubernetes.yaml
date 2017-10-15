@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: croc-hunter
-        image: csanchez/croc-hunter:latest
+        image: gcr.io/api-project-642841493686/croc-hunter:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

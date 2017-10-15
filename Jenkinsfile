@@ -11,8 +11,7 @@ timestamps {
 
 podTemplate(name:'croc-hunter', label: 'jenkins-pipeline', containers: [
     containerTemplate(name: 'jnlp', image: 'jenkinsci/jnlp-slave:2.62', args: '${computer.jnlpmac} ${computer.name}', workingDir: '/home/jenkins', resourceRequestCpu: '200m', resourceLimitCpu: '200m', resourceRequestMemory: '256Mi', resourceLimitMemory: '256Mi'),
-    containerTemplate(name: 'docker', image: 'docker:1.12.6',       command: 'cat', ttyEnabled: true),
-    containerTemplate(name: 'gcloud', image: 'gcloud',       command: 'cat', ttyEnabled: true),
+    containerTemplate(name: 'docker', image: 'csanchez/google-cloud-sdk-docker-client', command: 'cat', ttyEnabled: true),
     containerTemplate(name: 'golang', image: 'golang:1.8.3', command: 'cat', ttyEnabled: true),
     containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm:v2.5.0', command: 'cat', ttyEnabled: true),
     containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.4.8', command: 'cat', ttyEnabled: true)
@@ -118,10 +117,10 @@ volumes:[
         //     auth_id   : config.container_repo.jenkins_creds_id
         // )
 
-        sh "docker build -t ${config.container_repo.host}/${config.container_repo.master_acct}/${config.container_repo.repo} ."
-      }
-      container('gcloud') {
-        sh "gcloud docker -- push ${config.container_repo.host}/${config.container_repo.master_acct}/${config.container_repo.repo}"
+        sh """
+        docker build -t ${config.container_repo.host}/${config.container_repo.master_acct}/${config.container_repo.repo} .
+        gcloud docker -- push ${config.container_repo.host}/${config.container_repo.master_acct}/${config.container_repo.repo}
+        """
       }
 
     }
