@@ -41,7 +41,7 @@ volumes:[
     // set additional git envvars for image tagging
     pipeline.gitEnvVars()
 
-    def namespace = "croc-hunter-${env.BRANCH_NAME.toLowerCase()}"
+    def namespace = "croc-hunter"
 
     // If pipeline debugging enabled
     if (config.pipeline.debug) {
@@ -125,11 +125,11 @@ volumes:[
 
     }
 
-    if (env.BRANCH_NAME =~ "PR-*" ) {
+    if (env.BRANCH_NAME =~ "demo" ) {
       stage ('deploy to k8s') {
 
         container('kubectl') {
-          sh "kubectl create namespace ${namespace}"
+          //sh "kubectl create namespace ${namespace}"
           sh "kubectl apply -n ${namespace} -f kubernetes.yaml"
         }
 
@@ -175,7 +175,7 @@ volumes:[
   }
 
   // deploy only the master branch
-  if (env.BRANCH_NAME == 'master') {
+  if (env.BRANCH_NAME == 'demo') {
     timeout(time:1, unit:'DAYS') {
       input id: 'approve', message:'Approve deployment?'
     }
@@ -185,7 +185,7 @@ volumes:[
       stage ('deploy to k8s') {
 
         container('kubectl') {
-          sh "kubectl create namespace ${namespace}"
+          // sh "kubectl create namespace ${namespace}"
           sh "kubectl apply -n ${namespace} -f kubernetes.yaml"
         }
 
