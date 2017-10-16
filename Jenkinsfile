@@ -109,19 +109,19 @@ volumes:[
 
 
         // build and publish container
-        // pipeline.containerBuildPub(
-        //     dockerfile: config.container_repo.dockerfile,
-        //     host      : config.container_repo.host,
-        //     acct      : acct,
-        //     repo      : config.container_repo.repo,
-        //     tags      : image_tags_list,
-        //     auth_id   : config.container_repo.jenkins_creds_id
-        // )
+        pipeline.containerBuildPub(
+            dockerfile: config.container_repo.dockerfile,
+            host      : config.container_repo.host,
+            acct      : acct,
+            repo      : config.container_repo.repo,
+            tags      : image_tags_list,
+            auth_id   : config.container_repo.jenkins_creds_id
+        )
 
-        sh """
-        docker build -t ${config.container_repo.host}/${config.container_repo.master_acct}/${config.container_repo.repo} .
-        gcloud docker -- push ${config.container_repo.host}/${config.container_repo.master_acct}/${config.container_repo.repo}
-        """
+        // sh """
+        // docker build --build-arg VCS_REF=${env.GIT_SHA} --build-arg BUILD_DATE=`date -u +'%Y-%m-%dT%H:%M:%SZ'` -t ${config.container_repo.host}/${config.container_repo.master_acct}/${config.container_repo.repo} .
+        // gcloud docker -- push ${config.container_repo.host}/${config.container_repo.master_acct}/${config.container_repo.repo}
+        // """
       }
 
     }

@@ -11,7 +11,7 @@
     "host": "gcr.io",
     "master_acct": "api-project-642841493686",
     "alt_acct": "api-project-642841493686",
-    "jenkins_creds_id": "quay_creds",
+    "jenkins_creds_id": "api-project-642841493686",
     "repo": "croc-hunter",
     "dockeremail": ".",
     "dockerfile": "./"
