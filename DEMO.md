@@ -13,7 +13,8 @@ kubectl access to a Kubernetes 1.4+ cluster
 
 In GKE, kubernetes nodes need access to gcr
 
-    gcloud container node-pools create pool-1 --cluster jenkins --zone us-central1-a --num-nodes 1 \
+    gcloud container node-pools create pool-1 --cluster jenkins --zone us-central1-a \
+      --num-nodes 1 -m n1-standard-2 \
       --scopes https://www.googleapis.com/auth/devstorage.read_write,https://www.googleapis.com/auth/pubsub
 
 # Install Helm (Mac OS)
