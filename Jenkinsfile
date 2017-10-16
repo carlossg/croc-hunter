@@ -135,7 +135,7 @@ volumes:[
 
         // run tests
         sh """
-        for i in \$(seq 1 12); do wget http://croc-hunter.croc-hunter -O /dev/null && break || sleep 10; done
+        for i in \$(seq 1 60); do wget http://croc-hunter.croc-hunter -O /dev/null && break || sleep 10; done
         wget http://croc-hunter.croc-hunter -O -
         """
 
