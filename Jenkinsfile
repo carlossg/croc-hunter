@@ -130,10 +130,10 @@ volumes:[
 
         container('kubectl') {
           //sh "kubectl create namespace ${namespace}"
-          sh """
-          kubectl apply -n ${namespace} -f kubernetes.yaml"
+          sh "kubectl apply -n ${namespace} -f kubernetes.yaml"
 
           // run tests
+          sh """
           for i in \$(seq 1 60); do
             wget http://croc-hunter.croc-hunter -O /dev/null && break || sleep 10;
             kubectl get -n ${namespace} all
