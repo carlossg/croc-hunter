@@ -6,6 +6,7 @@
 import groovy.json.*
 
 def pipeline = new io.estrado.Pipeline()
+def namespace = "croc-hunter"
 
 timestamps {
 
@@ -41,8 +42,6 @@ volumes:[
 
     // set additional git envvars for image tagging
     pipeline.gitEnvVars()
-
-    def namespace = "croc-hunter"
 
     // If pipeline debugging enabled
     if (config.pipeline.debug) {
@@ -183,6 +182,8 @@ volumes:[
     }
 
     node ('jenkins-pipeline') {
+
+      checkout scm
 
       stage ('deploy to k8s') {
 
