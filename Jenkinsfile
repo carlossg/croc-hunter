@@ -135,7 +135,10 @@ volumes:[
         }
 
         // run tests
-        sh "wget http://croc-hunter.croc-hunter"
+        sh """
+        for i in \$(seq 1 12); do wget http://croc-hunter.croc-hunter && break || sleep 10; done
+        wget http://croc-hunter.croc-hunter
+        """
 
         // delete test deployment
         container('kubectl') {
