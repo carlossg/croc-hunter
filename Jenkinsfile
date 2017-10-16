@@ -10,7 +10,7 @@ def pipeline = new io.estrado.Pipeline()
 timestamps {
 
 podTemplate(name:'croc-hunter', label: 'jenkins-pipeline', containers: [
-    containerTemplate(name: 'jnlp', image: 'jenkinsci/jnlp-slave:2.62', args: '${computer.jnlpmac} ${computer.name}', workingDir: '/home/jenkins', resourceRequestCpu: '200m', resourceLimitCpu: '200m', resourceRequestMemory: '256Mi', resourceLimitMemory: '256Mi'),
+    containerTemplate(name: 'jnlp', image: 'jenkins/jnlp-slave:3.10-1-alpine', args: '${computer.jnlpmac} ${computer.name}', workingDir: '/home/jenkins', resourceRequestCpu: '200m', resourceLimitCpu: '200m', resourceRequestMemory: '256Mi', resourceLimitMemory: '256Mi'),
     containerTemplate(name: 'docker', image: 'csanchez/google-cloud-sdk-docker-client', command: 'cat', ttyEnabled: true),
     containerTemplate(name: 'golang', image: 'golang:1.8.3', command: 'cat', ttyEnabled: true),
     containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm:v2.5.0', command: 'cat', ttyEnabled: true),
@@ -135,9 +135,7 @@ volumes:[
         }
 
         // run tests
-        container('kubectl') {
-          sh "curl -sSLf \$(kubectl get -n ${namespace} svc/croc-hunter -o jsonpath='{.spec.ports[0].nodePort}')"
-        }
+        sh "wget http://croc-hunter.croc-hunter"
 
         // delete test deployment
         container('kubectl') {
