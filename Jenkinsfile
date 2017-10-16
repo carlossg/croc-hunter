@@ -130,6 +130,9 @@ volumes:[
 
         container('kubectl') {
           //sh "kubectl create namespace ${namespace}"
+          println 'Creating service if it does not already exist'
+          sh "kubectl create -n ${namespace} -f kubernetes-service-lb.yaml || true"
+          println 'Creating deployment'
           sh "kubectl apply -n ${namespace} -f kubernetes.yaml"
 
           // run tests
@@ -188,6 +191,9 @@ volumes:[
 
         container('kubectl') {
           // sh "kubectl create namespace ${namespace}"
+          println 'Creating service if it does not already exist'
+          sh "kubectl create -n ${namespace} -f kubernetes-service-lb.yaml || true"
+          println 'Creating deployment'
           sh "kubectl apply -n ${namespace} -f kubernetes.yaml"
         }
 
