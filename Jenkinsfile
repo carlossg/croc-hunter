@@ -173,17 +173,13 @@ volumes:[
         // }
       }
     }
-  }
 
-  // deploy only the master branch
-  if (env.BRANCH_NAME == 'demo') {
-    timeout(time:1, unit:'DAYS') {
-      input id: 'approve', message:'Approve deployment?'
-    }
 
-    node ('jenkins-pipeline') {
-
-      checkout scm
+    // deploy only the master branch
+    if (env.BRANCH_NAME == 'demo') {
+      timeout(time:1, unit:'HOURS') {
+        input id: 'approve', message:'Approve deployment?'
+      }
 
       stage ('deploy to k8s') {
 
