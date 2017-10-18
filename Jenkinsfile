@@ -125,7 +125,7 @@ volumes:[
 
     }
 
-    if (env.BRANCH_NAME =~ "demo" ) {
+    if (env.BRANCH_NAME != "demo" ) {
       stage ('deploy to k8s') {
 
         container('kubectl') {
