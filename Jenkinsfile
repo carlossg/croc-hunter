@@ -120,6 +120,7 @@ volumes:[
         sh """
         docker build --build-arg VCS_REF=${env.GIT_SHA} --build-arg BUILD_DATE=`date -u +'%Y-%m-%dT%H:%M:%SZ'` -t ${config.container_repo.host}/${config.container_repo.master_acct}/${config.container_repo.repo} .
         gcloud docker -- push ${config.container_repo.host}/${config.container_repo.master_acct}/${config.container_repo.repo}
+        gcloud docker -- push ${config.container_repo.host}/${config.container_repo.master_acct}/${config.container_repo.repo}:${env.GIT_SHA}
         """
       }
 
@@ -194,6 +195,7 @@ volumes:[
           println 'Creating service if it does not already exist'
           sh "kubectl create -n ${namespace} -f kubernetes-service-lb.yaml || true"
           println 'Creating deployment'
+          sh "sed -i 's/latest/${env.GIT_SHA}/' kubernetes.yaml"
           sh "kubectl apply -n ${namespace} -f kubernetes.yaml"
         }
 
