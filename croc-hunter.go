@@ -16,6 +16,7 @@ func main() {
 
 	log.Println("Starting server...")
 
+
 	// point / at the handler function
 	http.HandleFunc("/", handler)
 
