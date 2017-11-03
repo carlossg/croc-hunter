@@ -120,6 +120,7 @@ volumes:[
         sh """
         docker build --build-arg VCS_REF=${env.GIT_SHA} --build-arg BUILD_DATE=`date -u +'%Y-%m-%dT%H:%M:%SZ'` -t ${config.container_repo.host}/${config.container_repo.master_acct}/${config.container_repo.repo} .
         gcloud docker -- push ${config.container_repo.host}/${config.container_repo.master_acct}/${config.container_repo.repo}
+        docker tag ${config.container_repo.host}/${config.container_repo.master_acct}/${config.container_repo.repo} ${config.container_repo.host}/${config.container_repo.master_acct}/${config.container_repo.repo}:${env.GIT_SHA}
         gcloud docker -- push ${config.container_repo.host}/${config.container_repo.master_acct}/${config.container_repo.repo}:${env.GIT_SHA}
         """
       }
